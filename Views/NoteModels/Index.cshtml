@@ -1,0 +1,106 @@
+﻿@model IEnumerable<Notes_Website.Models.NoteModel>
+
+@{
+    ViewData["Title"] = "Index";
+    int pNum = ViewBag.CurrentPageNumber;
+    //string nType = ViewBag.currentNoteType;
+    string cuurentNType = ViewBag.currentNoteType;
+}
+
+@if (cuurentNType != null)
+    {
+    <h1>@cuurentNType Notes</h1>
+}
+else
+{
+    <h1>All Notes</h1>
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-success btn-sm">Create New Note
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-plus" viewBox="0 0 16 16">
+            <path d="M8 6.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V11a.5.5 0 0 1-1 0V9.5H6a.5.5 0 0 1 0-1h1.5V7a.5.5 0 0 1 .5-.5z" />
+            <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z" />
+        </svg>
+    </a>
+</p>
+
+
+ <div class="dropdown mb-3">
+  <a class="btn btn-info dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+    Filter by Type
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-sort-down-alt" viewBox="0 0 16 16">
+        <path d="M3.5 3.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 12.293V3.5zm4 .5a.5.5 0 0 1 0-1h1a.5.5 0 0 1 0 1h-1zm0 3a.5.5 0 0 1 0-1h3a.5.5 0 0 1 0 1h-3zm0 3a.5.5 0 0 1 0-1h5a.5.5 0 0 1 0 1h-5zM7 12.5a.5.5 0 0 0 .5.5h7a.5.5 0 0 0 0-1h-7a.5.5 0 0 0-.5.5z"/>
+    </svg>
+  </a>
+
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+    <li><a class="my-2 dropdown-item @(null == cuurentNType ? "disabled": "")" asp-action="Notes" asp-route-num=1 asp-route-noteType=All>All</a></li>
+    @foreach (var ntype in ViewBag.noteTypes)
+    {
+        <li><a class="my-2 dropdown-item page-item @(ntype.Type == cuurentNType ? "disabled": "")" asp-action="Notes" asp-route-num=1 asp-route-noteType=@ntype.Type>@ntype.Type</a></li>
+    }
+  </ul>
+</div>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        <div class="col-sm-12 col-md-4 col-lg-3 mb-3">
+            <a asp-action="Details" asp-route-id="@item.Id" class="text-decoration-none text-reset">
+                <div class="card shadow mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title border-bottom"> @Html.DisplayFor(modelItem => item.Title)</h4>
+                        <p class="text-muted">@Html.DisplayFor(modelItem => item.Note_Part)</p>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.Note)</p>
+                        <p class="card-text">@Html.DisplayFor(modelItem => item.NoteType.Type)</p>
+                        <p class="text-muted">@Html.DisplayFor(modelItem => item.Added)</p>
+                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary btn-sm">
+                            Edit
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z" />
+                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z" />
+                            </svg>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">
+                            Delete
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </a>
+        </div>
+    }
+</div>
+
+<div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <li class="page-item @(pNum == 1 ? "disabled":"")">
+                <a class="page-link" asp-action="Notes" asp-route-num=@(pNum - 1)>
+                   @*asp-route-noteType=@nType*@
+                    Previous
+                </a>
+            </li>
+            @for (var i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(pNum == @i ? "active": "")"
+                @(pNum == @i ? "aria-current='page'": "")>
+                    <a class="page-link" asp-action="Notes" asp-route-num=@i>
+                   @*asp-route-noteType=@nType*@
+                        @i
+                    </a>
+                </li>
+            }
+            <li class="page-item @(pNum == ViewBag.TotalPages ? "disabled":"")">
+                <a class="page-link" asp-action="Notes" asp-route-num=@(pNum + 1)>
+                   @*asp-route-noteType=@nType*@
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
